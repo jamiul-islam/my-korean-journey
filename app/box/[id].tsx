@@ -1,26 +1,28 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  TextInput,
   Pressable,
-  Animated,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { useLocalSearchParams } from "expo-router";
 import { useBoxStore } from "../../stores/boxStore";
+import { generateSentence, suggestRelatedWords } from "../../lib/gemini";
 import WordCard from "../../components/WordCard";
 import AddWordModal from "../../components/AddWordModal";
-import { generateGrammarExplanation, generateSentence } from "../../lib/gemini";
 
 export default function BoxScreen() {
   const { id } = useLocalSearchParams();
   const box = useBoxStore((state) => state.boxes.find((b) => b.id === id));
   const addWord = useBoxStore((state) => state.addWord);
+  const updateWord = useBoxStore((state) => state.updateWord);
+  const removeWord = useBoxStore((state) => state.removeWord);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [sentence, setSentence] = useState("");
-  // const [grammarExplanation, setGrammarExplanation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAutofilling, setIsAutofilling] = useState(false);
 
   if (!box) return null;
 
@@ -33,24 +35,60 @@ export default function BoxScreen() {
     setIsModalVisible(false);
   };
 
+  const handleEditWord = (wordId: string) => {
+    return (korean: string, english: string) => {
+      updateWord(box.id, wordId, { korean, english });
+    };
+  };
+
+  const handleDeleteWord = (wordId: string) => {
+    return () => {
+      removeWord(box.id, wordId);
+    };
+  };
+
   const handleGenerateSentence = async () => {
     setIsLoading(true);
     try {
       const koreanWords = box.words.map((w) => w.korean);
       const newSentence = await generateSentence(koreanWords);
-      setSentence(newSentence as any);
-      // const explanation = await generateGrammarExplanation(newSentence as any);
-      // setGrammarExplanation(explanation as any);
+      setSentence(newSentence);
     } catch (error) {
       console.error("Error generating content:", error);
+      Alert.alert("Error", "Failed to generate sentence. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleAutofillWords = async () => {
+    setIsAutofilling(true);
+    try {
+      const remainingSlots = box.wordLimit - box.words.length;
+
+      const context = box.name;
+      const suggestedWords = await suggestRelatedWords(context, remainingSlots);
+
+      suggestedWords.forEach((word: { korean: string; english: string }) => {
+        addWord(box.id, {
+          korean: word.korean,
+          english: word.english,
+          color: box.color,
+        });
+      });
+
+      Alert.alert("Success", "Added suggested words to the box!");
+    } catch (error) {
+      console.error("Error autofilling words:", error);
+      Alert.alert("Error", "Failed to autofill words. Please try again.");
+    } finally {
+      setIsAutofilling(false);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
-      {/* --------------- BOX NAME ---------------  */}
+      {/* ------------ context name ------------ */}
       <View style={styles.header}>
         <Text style={styles.title}>{box.name}</Text>
         <Text style={styles.subtitle}>
@@ -58,41 +96,64 @@ export default function BoxScreen() {
         </Text>
       </View>
 
-      {/* --------------- WORD GRID ---------------  */}
-      <View style={styles.wordGrid}>
-        {box.words.map((word) => (
-          <WordCard key={word.id} word={word} />
-        ))}
+      {/* ------------ word boxes ------------ */}
+      <ScrollView>
+        <View style={styles.wordGrid}>
+          {box.words.map((word) => (
+            <WordCard
+              key={word.id}
+              word={word}
+              onEdit={handleEditWord(word.id)}
+              onDelete={handleDeleteWord(word.id)}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* ------------ Conditionally Rendered Buttons ------------ */}
+      <View style={styles.buttonContainer}>
+        {box.words.length < box.wordLimit && (
+          <View>
+            <Pressable
+              style={styles.addButton}
+              onPress={() => setIsModalVisible(true)}
+            >
+              <Text style={styles.buttonText}>Add Word</Text>
+            </Pressable>
+
+            <Pressable
+              style={[
+                styles.autofillButton,
+                isAutofilling && styles.disabledButton,
+              ]}
+              onPress={handleAutofillWords}
+              disabled={isAutofilling || box.words.length >= box.wordLimit}
+            >
+              <Text style={styles.buttonText}>
+                {isAutofilling ? "Adding Words..." : "Autofill Words"}
+              </Text>
+            </Pressable>
+          </View>
+        )}
+
+        {box.words.length > 0 && (
+          <Pressable
+            style={[styles.generateButton, isLoading && styles.disabledButton]}
+            onPress={handleGenerateSentence}
+            disabled={isLoading}
+          >
+            <Text style={styles.buttonText}>
+              {isLoading ? "Generating..." : "Generate Sentence"}
+            </Text>
+          </Pressable>
+        )}
       </View>
 
-      {/* --------------- BUTTONS ---------------  */}
-      {box.words.length < box.wordLimit && (
-        <Pressable
-          style={styles.addButton}
-          onPress={() => setIsModalVisible(true)}
-        >
-          <Text style={styles.buttonText}>Add Word</Text>
-        </Pressable>
-      )}
-
-      {box.words.length > 0 && (
-        <Pressable
-          style={[styles.generateButton, isLoading && styles.disabledButton]}
-          onPress={handleGenerateSentence}
-          disabled={isLoading}
-        >
-          <Text style={styles.buttonText}>
-            {isLoading ? "Generating..." : "Generate Sentence"}
-          </Text>
-        </Pressable>
-      )}
-
+      {/* ------------ Sentence ------------ */}
       {sentence && (
         <View style={styles.sentenceContainer}>
           <Text style={styles.sentenceTitle}>Generated Sentence:</Text>
           <Text style={styles.sentence}>{sentence}</Text>
-          {/* <Text style={styles.grammarTitle}>Grammar Explanation:</Text>
-          <Text style={styles.grammar}>{grammarExplanation}</Text> */}
         </View>
       )}
 
@@ -132,6 +193,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
   },
+  buttonContainer: {
+    gap: 10,
+    marginBottom: 20,
+  },
   addButton: {
     backgroundColor: "#2f95dc",
     padding: 15,
@@ -139,12 +204,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
+  autofillButton: {
+    backgroundColor: "#9c27b0",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
   generateButton: {
     backgroundColor: "#4CAF50",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 20,
   },
   disabledButton: {
     opacity: 0.5,
@@ -156,7 +226,6 @@ const styles = StyleSheet.create({
   },
   sentenceContainer: {
     padding: 15,
-    backgroundColor: "#f5f5f5",
     borderRadius: 8,
     marginBottom: 20,
   },
@@ -166,15 +235,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sentence: {
-    fontSize: 16,
-    marginBottom: 15,
-  },
-  grammarTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  grammar: {
     fontSize: 16,
   },
 });
