@@ -29,15 +29,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="boxes"
-        options={{
-          title: "Boxes",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="archive" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="summary"
         options={{
           title: "Today's Summary",

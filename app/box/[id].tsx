@@ -9,9 +9,9 @@ import {
 import { Text, View } from "../../components/Themed";
 import { useLocalSearchParams } from "expo-router";
 import { useBoxStore } from "../../stores/boxStore";
-import { generateSentence, generateGrammarExplanation } from "../../lib/openai";
 import WordCard from "../../components/WordCard";
 import AddWordModal from "../../components/AddWordModal";
+import { generateGrammarExplanation, generateSentence } from "../../lib/gemini";
 
 export default function BoxScreen() {
   const { id } = useLocalSearchParams();
@@ -38,8 +38,8 @@ export default function BoxScreen() {
     try {
       const koreanWords = box.words.map((w) => w.korean);
       const newSentence = await generateSentence(koreanWords);
-      // const explanation = await generateGrammarExplanation(newSentence as any);
       setSentence(newSentence as any);
+      // const explanation = await generateGrammarExplanation(newSentence as any);
       // setGrammarExplanation(explanation as any);
     } catch (error) {
       console.error("Error generating content:", error);
