@@ -31,7 +31,7 @@ export default function RegisterScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../assets/images/logo.png")}
+        source={require("../../assets/images/app-logo.png")}
         style={styles.logo}
       />
       <Text style={styles.title}>Create Account</Text>
@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 250,
+    height: 250,
     marginBottom: 20,
   },
   title: {

@@ -75,7 +75,12 @@ export default function BoxScreen() {
       }
 
       const context = box.name;
-      const suggestedWords = await suggestRelatedWords(context, remainingSlots);
+      const previousWords = (box.words || []).map((w) => w.korean);
+      const suggestedWords = await suggestRelatedWords(
+        context,
+        remainingSlots,
+        previousWords
+      );
 
       suggestedWords.forEach((word: { korean: string; english: string }) => {
         addWord(box.id, {
