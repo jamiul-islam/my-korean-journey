@@ -31,7 +31,7 @@ export const suggestRelatedWords = async (
   previousWords: string[] = []
 ) => {
   try {
-    const prompt = `Suggest 1 new Korean word except ${previousWords} and ${context}) - that are related to the context of: ${context}.
+    const prompt = `Suggest 1 new Korean word except any of ${previousWords} and ${context}) - but only the one that is related to the context of: ${context}.
                    Format the response a JSON array of objects inside string, each with 'korean' and 'english' properties.
                    Example: [{"korean": "의자", "english": "Chair"}]`;
 

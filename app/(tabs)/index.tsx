@@ -4,6 +4,7 @@ import { useBoxStore } from "../../stores/boxStore";
 import AddBoxButton from "../../components/AddBoxButton";
 import BoxList from "../../components/BoxList";
 import React from "react";
+import { StatusBar } from "expo-status-bar";
 
 export default function HomeScreen() {
   const boxes = useBoxStore((state) => state.boxes);

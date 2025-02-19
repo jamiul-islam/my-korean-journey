@@ -121,26 +121,28 @@ export default function BoxScreen() {
 
       <View style={styles.buttonContainer}>
         {box.words.length < box.wordLimit && (
-          <Pressable
-            style={styles.addButton}
-            onPress={() => setIsModalVisible(true)}
-          >
-            <Text style={styles.buttonText}>Add Word</Text>
-          </Pressable>
-        )}
+          <View>
+            <Pressable
+              style={styles.addButton}
+              onPress={() => setIsModalVisible(true)}
+            >
+              <Text style={styles.buttonText}>Add Word</Text>
+            </Pressable>
 
-        <Pressable
-          style={[
-            styles.autofillButton,
-            isAutofilling && styles.disabledButton,
-          ]}
-          onPress={handleAutofillWords}
-          disabled={isAutofilling || box.words.length >= box.wordLimit}
-        >
-          <Text style={styles.buttonText}>
-            {isAutofilling ? "Adding Word..." : "Autofill Word"}
-          </Text>
-        </Pressable>
+            <Pressable
+              style={[
+                styles.autofillButton,
+                isAutofilling && styles.disabledButton,
+              ]}
+              onPress={handleAutofillWords}
+              disabled={isAutofilling || box.words.length >= box.wordLimit}
+            >
+              <Text style={styles.buttonText}>
+                {isAutofilling ? "Adding Word..." : "Autofill Word"}
+              </Text>
+            </Pressable>
+          </View>
+        )}
 
         {box.words.length > 0 && (
           <Pressable
@@ -214,6 +216,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
+    marginBottom: 10,
   },
   autofillButton: {
     backgroundColor: "#9c27b0",
