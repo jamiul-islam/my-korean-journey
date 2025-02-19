@@ -15,7 +15,7 @@ export default function SummaryScreen() {
             boxId: box.id,
             boxName: box.name,
             boxColor: box.color,
-            sentence: "Example sentence using words from this box",
+            sentence: box.sentences,
             timestamp: new Date().toLocaleString(),
           },
         ]
@@ -42,7 +42,9 @@ export default function SummaryScreen() {
               onPress={() => router.push(`/box/${item.boxId}`)}
             >
               <Text style={styles.boxName}>{item.boxName}</Text>
-              <Text style={styles.sentence}>{item.sentence}</Text>
+              <Text style={styles.sentence}>
+                {item.sentence.length} sentences
+              </Text>
               <Text style={styles.timestamp}>{item.timestamp}</Text>
             </Pressable>
           ))
