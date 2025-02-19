@@ -20,7 +20,12 @@ export default function HomeScreen() {
             <AddBoxButton />
           </View>
         ) : (
-          <BoxList boxes={boxes} />
+          <View style={styles.bottomContainer}>
+            <BoxList boxes={boxes} />
+            <View style={styles.buttonContainer}>
+              <AddBoxButton />
+            </View>
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -47,5 +52,11 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     marginBottom: 30,
+  },
+  bottomContainer: {
+    flex: 1,
+  },
+  buttonContainer: {
+    alignItems: "center",
   },
 });

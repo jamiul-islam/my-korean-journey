@@ -25,7 +25,7 @@ export const suggestRelatedWords = async (
 ) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `Suggest ${count} Korean words related to: ${context}'s context. 
+    const prompt = `Suggest ${count} new Korean words that are related to the context of: ${context}.
                    Format the response a JSON array of objects inside string, each with 'korean' and 'english' properties.
                    Example: [{"korean": "의자", "english": "Chair"}]`;
 
