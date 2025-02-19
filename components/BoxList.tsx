@@ -71,7 +71,8 @@ export default function BoxList({ boxes }: BoxListProps) {
     >
       <Text style={styles.boxName}>{item.name}</Text>
       <Text style={styles.boxInfo}>
-        {item.words.length}/{item.wordLimit} words
+        {item.words.length}/{item.wordLimit} words, {item.sentences.length}{" "}
+        sentences
       </Text>
     </Pressable>
   );

@@ -3,12 +3,18 @@ import Constants from "expo-constants";
 
 const genAI = new GoogleGenerativeAI(Constants.expoConfig?.extra?.geminiApiKey);
 
-export const generateSentence = async (words: string[]) => {
+export const generateSentence = async (
+  words: string[],
+  previousSentences: string[] = []
+) => {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = `Create a simple one line Korean sentence using these words: ${words.join(
       ", "
-    )}. The response should ONLY contain the Korean sentence and it's english translation, nothing else.`;
+    )}. The sentence should be different from these previous sentences: ${previousSentences.join(
+      ", "
+    )}
+    The new response should ONLY contain the Korean sentence and it's english translation, nothing else.`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -19,13 +25,11 @@ export const generateSentence = async (words: string[]) => {
   }
 };
 
-export const suggestRelatedWords = async (
-  context: string,
-  count: number = 5
-) => {
+export const suggestRelatedWords = async (context: string, count: number) => {
+  console.log(context, count);
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `Suggest ${count} new Korean words that are related to the context of: ${context}.
+    const prompt = `Suggest 1 new Korean word that are related to the context of: ${context}.
                    Format the response a JSON array of objects inside string, each with 'korean' and 'english' properties.
                    Example: [{"korean": "의자", "english": "Chair"}]`;
 

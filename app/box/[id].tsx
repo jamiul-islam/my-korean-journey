@@ -19,8 +19,8 @@ export default function BoxScreen() {
   const addWord = useBoxStore((state) => state.addWord);
   const updateWord = useBoxStore((state) => state.updateWord);
   const removeWord = useBoxStore((state) => state.removeWord);
+  const addSentence = useBoxStore((state) => state.addSentence);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [sentence, setSentence] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAutofilling, setIsAutofilling] = useState(false);
 
@@ -51,8 +51,12 @@ export default function BoxScreen() {
     setIsLoading(true);
     try {
       const koreanWords = box.words.map((w) => w.korean);
-      const newSentence = await generateSentence(koreanWords);
-      setSentence(newSentence);
+      const previousSentences = (box.sentences || []).map((s) => s.text);
+      const newSentence = await generateSentence(
+        koreanWords,
+        previousSentences
+      );
+      addSentence(box.id, newSentence);
     } catch (error) {
       console.error("Error generating content:", error);
       Alert.alert("Error", "Failed to generate sentence. Please try again.");
@@ -65,6 +69,10 @@ export default function BoxScreen() {
     setIsAutofilling(true);
     try {
       const remainingSlots = box.wordLimit - box.words.length;
+      if (remainingSlots <= 0) {
+        Alert.alert("Box Full", "This box has reached its word limit.");
+        return;
+      }
 
       const context = box.name;
       const suggestedWords = await suggestRelatedWords(context, remainingSlots);
@@ -88,7 +96,6 @@ export default function BoxScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* ------------ context name ------------ */}
       <View style={styles.header}>
         <Text style={styles.title}>{box.name}</Text>
         <Text style={styles.subtitle}>
@@ -96,45 +103,39 @@ export default function BoxScreen() {
         </Text>
       </View>
 
-      {/* ------------ word boxes ------------ */}
-      <ScrollView>
-        <View style={styles.wordGrid}>
-          {box.words.map((word) => (
-            <WordCard
-              key={word.id}
-              word={word}
-              onEdit={handleEditWord(word.id)}
-              onDelete={handleDeleteWord(word.id)}
-            />
-          ))}
-        </View>
-      </ScrollView>
+      <View style={styles.wordGrid}>
+        {box.words.map((word) => (
+          <WordCard
+            key={word.id}
+            word={word}
+            onEdit={handleEditWord(word.id)}
+            onDelete={handleDeleteWord(word.id)}
+          />
+        ))}
+      </View>
 
-      {/* ------------ Conditionally Rendered Buttons ------------ */}
       <View style={styles.buttonContainer}>
         {box.words.length < box.wordLimit && (
-          <View>
-            <Pressable
-              style={styles.addButton}
-              onPress={() => setIsModalVisible(true)}
-            >
-              <Text style={styles.buttonText}>Add Word</Text>
-            </Pressable>
-
-            <Pressable
-              style={[
-                styles.autofillButton,
-                isAutofilling && styles.disabledButton,
-              ]}
-              onPress={handleAutofillWords}
-              disabled={isAutofilling || box.words.length >= box.wordLimit}
-            >
-              <Text style={styles.buttonText}>
-                {isAutofilling ? "Adding Words..." : "Autofill Words"}
-              </Text>
-            </Pressable>
-          </View>
+          <Pressable
+            style={styles.addButton}
+            onPress={() => setIsModalVisible(true)}
+          >
+            <Text style={styles.buttonText}>Add Word</Text>
+          </Pressable>
         )}
+
+        <Pressable
+          style={[
+            styles.autofillButton,
+            isAutofilling && styles.disabledButton,
+          ]}
+          onPress={handleAutofillWords}
+          disabled={isAutofilling || box.words.length >= box.wordLimit}
+        >
+          <Text style={styles.buttonText}>
+            {isAutofilling ? "Adding Word..." : "Autofill Word"}
+          </Text>
+        </Pressable>
 
         {box.words.length > 0 && (
           <Pressable
@@ -149,11 +150,17 @@ export default function BoxScreen() {
         )}
       </View>
 
-      {/* ------------ Sentence ------------ */}
-      {sentence && (
-        <View style={styles.sentenceContainer}>
-          <Text style={styles.sentenceTitle}>Generated Sentence:</Text>
-          <Text style={styles.sentence}>{sentence}</Text>
+      {(box.sentences || []).length > 0 && (
+        <View style={styles.sentencesContainer}>
+          <Text style={styles.sentencesTitle}>Generated Sentences:</Text>
+          {box.sentences.map((sentence) => (
+            <View key={sentence.id} style={styles.sentenceCard}>
+              <Text style={styles.sentence}>{sentence.text}</Text>
+              <Text style={styles.timestamp}>
+                {new Date(sentence.timestamp).toLocaleString()}
+              </Text>
+            </View>
+          ))}
         </View>
       )}
 
@@ -202,7 +209,6 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
-    marginBottom: 10,
   },
   autofillButton: {
     backgroundColor: "#9c27b0",
@@ -224,17 +230,37 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  sentenceContainer: {
+  sentencesContainer: {
+    marginTop: 20,
     padding: 15,
+    backgroundColor: "#f5f5f5",
     borderRadius: 8,
-    marginBottom: 20,
   },
-  sentenceTitle: {
+  sentencesTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    marginBottom: 15,
+  },
+  sentenceCard: {
+    backgroundColor: "white",
+    padding: 15,
+    borderRadius: 8,
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   sentence: {
     fontSize: 16,
+    marginBottom: 8,
+  },
+  timestamp: {
+    fontSize: 12,
+    color: "#666",
   },
 });
