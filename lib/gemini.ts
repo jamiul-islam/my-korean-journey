@@ -16,9 +16,9 @@ export const generateSentence = async (
     )}
     The new response should ONLY contain the Korean sentence and it's english translation, nothing else.`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    return response.text();
+    const result = await model?.generateContent(prompt);
+    const response = await result?.response;
+    return response?.text();
   } catch (error) {
     console.error("Error generating sentence:", error);
     throw error;
@@ -31,14 +31,14 @@ export const suggestRelatedWords = async (
   previousWords: string[] = []
 ) => {
   try {
-    const prompt = `Suggest 1 new Korean word except any of ${previousWords} and ${context}) - but only the one that is related to the context of: ${context}.
-                   Format the response a JSON array of objects inside string, each with 'korean' and 'english' properties.
+    const prompt = `Suggest ${count} new Korean word except any of (${previousWords} and ${context}) - but only the ones that sounds similar in pronunciation to or related to the context of: ${context}.
+                   Format the response as a JSON array of objects inside a string, each with 'korean' and 'english' properties.
                    Example: [{"korean": "의자", "english": "Chair"}]`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const responseText = response.text();
-    const match = responseText.match(/\[.*\]/);
+    const result = await model?.generateContent(prompt);
+    const response = await result?.response;
+    const responseText = await response?.text();
+    const match = responseText?.match(/\[.*\]/);
     if (match) {
       return JSON.parse(match[0]);
     } else {
