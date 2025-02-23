@@ -16,6 +16,57 @@ Thus, I created 📚 한국어 AI, an application designed not only for myself b
 - Autofill word button generates contextually relevant words
 - Generate sentence button creates Korean sentences with English translations using the word cards in a specific box
 
+### DEVELOPMENT SCHEDULE
+
+```plaintext
+# Project Timeline: Korean Language Learning App
+January 3rd - February 21st, 2024
+
+Week:    W1      W2      W3      W4      W5      W6      W7
+Date:    01/03   01/10   01/17   01/24   01/31   02/07   02/14
+        |-------|-------|-------|-------|-------|-------|-------|
+Planning|███████|       |       |       |       |       |       |
+        |-------|-------|-------|-------|-------|-------|-------|
+Design  |   |███████████|███████|       |       |       |       |
+        |-------|-------|-------|-------|-------|-------|-------|
+Dev     |       |       |███████|███████|███████|███    |       |
+        |-------|-------|-------|-------|-------|-------|-------|
+Testing |       |       |       |       |   |███████████|███████|
+        |-------|-------|-------|-------|-------|-------|-------|
+
+Detailed Breakdown:
+
+Week 1 (Jan 03-09):
+▓ Requirements gathering
+▓ Project planning
+▓ Initial wireframing
+▓ Technology stack selection
+
+Week 2-3 (Jan 10-23):
+▓ UI/UX design
+▓ Component architecture
+▓ Navigation flow
+▓ Design system setup
+
+Week 3-5 (Jan 17-Feb 06):
+▓ Core functionality development
+▓ Firebase integration
+▓ Gemini AI implementation
+▓ State management setup
+▓ Component development
+
+Week 5-7 (Jan 31-Feb 21):
+▓ Unit testing
+▓ Integration testing
+▓ Bug fixes
+▓ Performance optimization
+▓ User acceptance testing
+
+Legend:
+███ = Active development period
+
+```
+
 ### Wireframe
 
 ```plaintext
@@ -96,57 +147,6 @@ Thus, I created 📚 한국어 AI, an application designed not only for myself b
 • Gemini AI: Sentence generation and word suggestions
 ```
 
-### DEVELOPMENT SCHEDULE
-
-```plaintext
-# Project Timeline: Korean Language Learning App
-January 3rd - February 21st, 2024
-
-Week:    W1      W2      W3      W4      W5      W6      W7
-Date:    01/03   01/10   01/17   01/24   01/31   02/07   02/14   
-        |-------|-------|-------|-------|-------|-------|-------|
-Planning|███████|       |       |       |       |       |       |
-        |-------|-------|-------|-------|-------|-------|-------|
-Design  |   |███████████|███████|       |       |       |       |
-        |-------|-------|-------|-------|-------|-------|-------|
-Dev     |       |       |███████|███████|███████|███    |       |
-        |-------|-------|-------|-------|-------|-------|-------|
-Testing |       |       |       |       |   |███████████|███████|
-        |-------|-------|-------|-------|-------|-------|-------|
-
-Detailed Breakdown:
-
-Week 1 (Jan 03-09):
-▓ Requirements gathering
-▓ Project planning
-▓ Initial wireframing
-▓ Technology stack selection
-
-Week 2-3 (Jan 10-23):
-▓ UI/UX design
-▓ Component architecture
-▓ Navigation flow
-▓ Design system setup
-
-Week 3-5 (Jan 17-Feb 06):
-▓ Core functionality development
-▓ Firebase integration
-▓ Gemini AI implementation
-▓ State management setup
-▓ Component development
-
-Week 5-7 (Jan 31-Feb 21):
-▓ Unit testing
-▓ Integration testing
-▓ Bug fixes
-▓ Performance optimization
-▓ User acceptance testing
-
-Legend:
-███ = Active development period
-
-```
-
 ### Screenshots
 
 <table>
@@ -168,20 +168,20 @@ Legend:
 
 1. **Clone the repository:**
 
-```sh
-git clone https://github.com/yourusername/korean-lang-app.git
-cd korean-lang-app
+```bash
+git clone https://github.com/jamiul-islam/my-korean-journey.git
+cd my-korean-journey
 ```
 
 2. **Install dependencie**
 
-```ssh
+```bash
 yarn install
 ```
 
 3. **Set up environment variable**
 
-```ssh
+```
 FIREBASE_API_KEY=your_api_key
 FIREBASE_AUTH_DOMAIN=your_auth_domain
 FIREBASE_PROJECT_ID=your_project_id
@@ -193,8 +193,15 @@ GEMINI_API_KEY=your_gemini_api_key
 
 4. **Start the application**
 
-```ssh
-yarn start
+```bash
+yarn start     # to run expo
+yarn run ios   # to run on ios simulator
+```
+
+5. **Test the application**
+
+```bash
+yarn test      # to test the app
 ```
 
 ### Upcoming Features
