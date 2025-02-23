@@ -144,7 +144,7 @@ export const useBoxStore = create<BoxState>((set, get) => ({
 }));
 
 // Load initial state from AsyncStorage and ensure sentences array exists
-AsyncStorage.getItem("boxes").then((boxes) => {
+AsyncStorage.getItem("boxes")?.then((boxes) => {
   if (boxes) {
     const parsedBoxes = JSON.parse(boxes);
     // Ensure each box has a sentences array
