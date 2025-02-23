@@ -96,6 +96,57 @@ Thus, I created 📚 한국어 AI, an application designed not only for myself b
 • Gemini AI: Sentence generation and word suggestions
 ```
 
+### DEVELOPMENT SCHEDULE
+
+```plaintext
+# Project Timeline: Korean Language Learning App
+January 3rd - February 21st, 2024
+
+Week:    W1      W2      W3      W4      W5      W6      W7
+Date:    01/03   01/10   01/17   01/24   01/31   02/07   02/14   
+        |-------|-------|-------|-------|-------|-------|-------|
+Planning|███████|       |       |       |       |       |       |
+        |-------|-------|-------|-------|-------|-------|-------|
+Design  |   |███████████|███████|       |       |       |       |
+        |-------|-------|-------|-------|-------|-------|-------|
+Dev     |       |       |███████|███████|███████|███    |       |
+        |-------|-------|-------|-------|-------|-------|-------|
+Testing |       |       |       |       |   |███████████|███████|
+        |-------|-------|-------|-------|-------|-------|-------|
+
+Detailed Breakdown:
+
+Week 1 (Jan 03-09):
+▓ Requirements gathering
+▓ Project planning
+▓ Initial wireframing
+▓ Technology stack selection
+
+Week 2-3 (Jan 10-23):
+▓ UI/UX design
+▓ Component architecture
+▓ Navigation flow
+▓ Design system setup
+
+Week 3-5 (Jan 17-Feb 06):
+▓ Core functionality development
+▓ Firebase integration
+▓ Gemini AI implementation
+▓ State management setup
+▓ Component development
+
+Week 5-7 (Jan 31-Feb 21):
+▓ Unit testing
+▓ Integration testing
+▓ Bug fixes
+▓ Performance optimization
+▓ User acceptance testing
+
+Legend:
+███ = Active development period
+
+```
+
 ### Screenshots
 
 <table>
