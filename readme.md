@@ -18,6 +18,7 @@ Thus, I created 📚 한국어 AI, an application designed not only for myself b
 
 ### Wireframe
 
+```plaintext
 +-------------------------------------------------------------------------------------------+
 |                                  Korean Language Learning App                             |
 +-------------------------------------------------------------------------------------------+
@@ -27,7 +28,7 @@ Thus, I created 📚 한국어 AI, an application designed not only for myself b
 │   Login Screen  │ ──> │ Register Screen │
 └────────┬────────┘     └────────┬────────┘
          │                       │
-         └─────────┬────────────┘
+         └─────────┬─────────────┘
                    ▼
 ┌─────────────────────────────────┐
 │        Main Tab Navigation      │
@@ -93,7 +94,7 @@ Thus, I created 📚 한국어 AI, an application designed not only for myself b
 • AsyncStorage: Boxes, words, and sentences
 • Firebase: User authentication
 • Gemini AI: Sentence generation and word suggestions
-
+```
 
 ### Screenshots
 
